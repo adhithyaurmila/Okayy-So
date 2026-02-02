@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine 💖</title>
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: #0f0f14;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
+    color: white;
+  }
+
+  /* Faint main background */
+  .bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('background.jpg') center/cover no-repeat;
+    opacity: 0.18;
+    z-index: 0;
+  }
+
+  .box {
+    text-align: center;
+    background: #1a1a24;
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 0 30px rgba(255, 77, 109, 0.4);
+    z-index: 2;
+  }
+
+  h1 {
+    color: #ff4d6d;
+  }
+
+  button {
+    padding: 12px 26px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    margin: 12px;
+  }
+
+  #yes {
+    background: linear-gradient(135deg, #ff4d6d, #ff7a90);
+    color: white;
+  }
+
+  #no {
+    background-color: #555;
+    position: absolute;
+  }
+
+  #note {
+    display: none;
+    background: rgba(20, 20, 28, 0.96);
+    padding: 45px;
+    border-radius: 20px;
+    max-width: 520px;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(255, 77, 109, 0.5);
+    z-index: 2;
+    position: relative;
+  }
+
+  #note p {
+    font-size: 18px;
+    line-height: 1.8;
+    color: #f2f2f2;
+    margin-bottom: 30px;
+  }
+
+  #note strong {
+    color: #ff4d6d;
+    font-size: 20px;
+  }
+
+  /* Small faded cameo image */
+  .cameo {
+    width: 180px;
+    margin: 0 auto;
+    opacity: 0.30;           /* VERY subtle */
+    filter: blur(0.3px);
+    border-radius: 12px;
+  }
+
+  canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+
+<canvas id="fireworks"></canvas>
+
+<audio id="music" src="music.mp3" loop></audio>
+
+<div class="box" id="questionBox">
+  <h1>Will you be my Valentine? 💘</h1>
+  <button id="yes" onclick="yesClicked()">Yes 💖</button>
+  <button id="no" onmouseover="moveNo()">No 💔</button>
+</div>
+
+<div id="note">
+  <p>
+    You tried to click “No”, didn’t you?<br>
+    Yeah… I saw that coming 😏<br><br>
+
+    And by the way, congratulations 🎉<br>
+    You’ve officially signed up for unlimited love,<br>
+    surprise hugs,<br>
+    and a girl who will always care a little too much.<br><br>
+
+    But jokes aside —<br>
+    just so you know…<br><br>
+
+    <strong>I lavv youu endlesslyy, and more than you realize, cutie. 🤍</strong>
+  </p>
+
+  <!-- Cameo image -->
+  <img src="cameo.jpg" class="cameo" alt="Taki and Mitsuha">
+</div>
+
+<script>
+  const canvas = document.getElementById("fireworks");
+  const ctx = canvas.getContext("2d");
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+
+  let particles = [];
+
+  function moveNo() {
+    const no = document.getElementById("no");
+    no.style.left = Math.random() * (window.innerWidth - 120) + "px";
+    no.style.top = Math.random() * (window.innerHeight - 60) + "px";
+  }
+
+  function yesClicked() {
+    alert("Noice choice 😌");
+    document.getElementById("questionBox").style.display = "none";
+    document.getElementById("note").style.display = "block";
+    document.getElementById("music").play();
+    startFireworks();
+  }
+
+  function startFireworks() {
+    setInterval(() => {
+      for (let i = 0; i < 80; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 3 + 2,
+          dx: Math.random() * 4 - 2,
+          dy: Math.random() * 4 - 2,
+          life: 120,
+          color: `hsl(${Math.random() * 360}, 100%, 70%)`
+        });
+      }
+    }, 500);
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach((p, i) => {
+      ctx.beginPath();
+      ctx.fillStyle = p.color;
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+      p.x += p.dx;
+      p.y += p.dy;
+      p.life--;
+      if (p.life <= 0) particles.splice(i, 1);
+    });
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>
+
+</body>
+</html>
